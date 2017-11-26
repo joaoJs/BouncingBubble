@@ -24,7 +24,7 @@ function init() {
 
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.2, 10000 );
     camera.position.z = 500;
 
     renderer = new THREE.WebGLRenderer();
@@ -51,12 +51,12 @@ function init() {
 
     var cubeMaterialArray = [];
   	// order to add materials: x+,x-,y+,y-,z+,z-
-  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { color: 'rgb(100,100,100)' } ) );
-  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { color: 0xff8800 } ) );
-  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { color: 0xffff33 } ) );
-  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { color: 0x33ff33 } ) );
+  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { color: 'rgb(255,0,0)', transparent: true, opacity: 0.5 } ) );
+  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { color: 'rgb(255,0,0)', transparent: true, opacity: 0.5 } ) );
+  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { color: 'rgb(255,0,0)', transparent: true, opacity: 0.5 } ) );
+  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { color: 'rgb(255,0,0)', transparent: true, opacity: 0.5 } ) );
   	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture('images/ana2.png') } ) );
-  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { color: 0x8833ff } ) );
+  	cubeMaterialArray.push( new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture('images/ana2.png')  } ) );
   	var cubeMaterials = new THREE.MeshFaceMaterial( cubeMaterialArray );
   	// Cube parameters: width (x), height (y), depth (z),
   	//        (optional) segments along x, segments along y, segments along z
@@ -66,6 +66,23 @@ function init() {
   	cube = new THREE.Mesh( cubeGeometry, cubeMaterials );
   	cube.position.set(-200, 0, 200);
   	scene.add( cube );
+
+    console.log(cube);
+
+    // add spotLight on ana
+    var spotLight = new THREE.SpotLight( 0xffffff );
+    spotLight.position.set( -300, 0, 300 );
+
+    spotLight.castShadow = true;
+
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+
+    spotLight.shadow.camera.near = 500;
+    spotLight.shadow.camera.far = 4000;
+    spotLight.shadow.camera.fov = 30;
+
+    scene.add( spotLight );
 
 
     // // SKYBOX
@@ -90,7 +107,7 @@ function init() {
   	// scene.add( skyBox
 
     materialArray = new THREE.MeshBasicMaterial({
-      map: THREE.ImageUtils.loadTexture('images/checkerboard.jpg'),
+      map: THREE.ImageUtils.loadTexture('images/Stripes.jpg'),
       side: THREE.BackSide
     });
     var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
@@ -144,7 +161,7 @@ var goesDown;
 var goesFar;
 var comesClose;
 var goesLeft;
-var goesRight
+var goesRight;
 
 console.log(sphere);
 
@@ -153,6 +170,14 @@ function animate() {
     sphere.visible = false;
     refractSphereCamera.updateCubeMap( renderer, scene );
     sphere.visible = true;
+
+    cube.rotation.y += 0.01;
+
+    cube.position.x += 1;
+    if (cube.position.x >= 500) {
+      cube.position.x = -500;
+    }
+
 
     moveSphere();
 
@@ -170,7 +195,7 @@ function animate() {
 
 // function to move sphere
 function moveSphere() {
-  if (sphere.position.z <= -300) {
+  if (sphere.position.z <= -800) {
     comesClose = true;
     goesFar = false;
   } else if (sphere.position.z >= 300) {
