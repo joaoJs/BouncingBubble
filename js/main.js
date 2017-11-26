@@ -16,11 +16,15 @@ var sphere;
 var refractSphereCamera;
 var cube;
 
+const ligeti = new Audio('sounds/LigetiRicercata.mp3');
 
 init();
 animate();
 
 function init() {
+
+    ligeti.currentTime = 3;
+    ligeti.play();
 
     scene = new THREE.Scene();
 
