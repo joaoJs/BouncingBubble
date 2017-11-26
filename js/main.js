@@ -180,6 +180,7 @@ function animate() {
     cube.position.x += 1;
     if (cube.position.x >= 500) {
       cube.position.x = -500;
+      cube.position.z = Math.floor(Math.random() * 701) - 500;
     }
 
 
